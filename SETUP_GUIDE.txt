@@ -1,0 +1,196 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                         SUSTAINALYZE - SETUP GUIDE                            ║
+║          Carbon Emission Forecasting Application - XAMPP & Local Dev           ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+📋 REQUIREMENTS
+================================================================================
+✓ XAMPP (Apache + MySQL)
+✓ Python 3.8+
+✓ Node.js (Optional, for npm packages)
+✓ VSCode (or any code editor)
+
+🚀 QUICK START
+================================================================================
+
+STEP 1: Install XAMPP
+───────────────────────────────────────────���────────────────────────────────────
+1. Download XAMPP from: https://www.apachefriends.org/
+2. Run the installer and follow instructions
+3. Choose installation directory (C:\xampp on Windows)
+4. Select Apache, MySQL, PHP
+5. Complete installation
+
+STEP 2: Install Python Dependencies
+────────────────────────────────────────────────────────────────────────────────
+Open Command Prompt/Terminal and run:
+
+  pip install pandas numpy scikit-learn flask flask-cors pickle
+
+Or use requirements.txt:
+  
+  pip install -r requirements.txt
+
+STEP 3: Prepare Data Directory
+────────────────────────────────────────────────────────────────────────────────
+Create folder structure:
+
+  sustainalyze/
+  ├── backend/
+  │   ├── app.py
+  │   ├── train_model.py
+  │   └── models/         (will be created)
+  ├── frontend/
+  │   ├── index.html
+  │   ├── styles.css
+  │   ├── app.js
+  │   └── data/
+  │       └── ENERGY_DATA_CLEANED.csv
+  └── data/
+      └── ENERGY_DATA_CLEANED.csv
+
+STEP 4: Train the Model
+────────────────────────────────────────────────────────────────────────────────
+1. Copy your CSV file to: backend/data/ENERGY_DATA_CLEANED.csv
+2. Open Command Prompt in the backend folder
+3. Run:
+  
+  python train_model.py
+
+   ✅ This will create:
+   - models/gb_reg_model.pkl
+   - models/scaler.pkl
+   - models/co2_thresholds.pkl
+
+STEP 5: Start Backend (Flask API)
+────────────────────────────────────────────────────────────────────────────────
+1. Open Command Prompt in the backend folder
+2. Run:
+  
+  python app.py
+
+   You should see:
+   * Running on http://localhost:5000
+   * WARNING: This is a development server
+
+   ✅ Backend is now running!
+
+STEP 6: Copy Frontend to XAMPP
+────────────────────────────────────────────────────────────────────────────────
+1. Copy entire frontend/ folder to:
+   C:\xampp\htdocs\sustainalyze\
+
+   Result:
+   C:\xampp\htdocs\sustainalyze\
+   ├── index.html
+   ├── styles.css
+   ├── app.js
+   └── data/
+       └── ENERGY_DATA_CLEANED.csv
+
+STEP 7: Start Apache
+────────────────────────────────────────────────────────────────────────────────
+1. Open XAMPP Control Panel
+2. Click "Start" next to Apache
+3. Check: Apache should show "Running" in green
+
+STEP 8: Access the Application
+────────────────────────────────────────────────────────────────────────────────
+Open your browser and go to:
+  
+  http://localhost/sustainalyze/
+
+   ✅ Application is now live!
+
+📊 FULL SYSTEM ARCHITECTURE
+================================================================================
+
+Frontend (Port 80 - XAMPP Apache)
+├─ index.html .............. Main HTML interface
+├─ styles.css .............. Styling (Tailwind-like)
+├─ app.js .................. JavaScript logic & API calls
+└─ data/ENERGY_DATA_CLEANED.csv ... Visualization data
+
+Backend (Port 5000 - Flask)
+├─ app.py .................. Flask API server
+├─ train_model.py .......... Model training script
+└─ models/
+   ├─ gb_reg_model.pkl ..... Trained model
+   ├─ scaler.pkl ........... Feature scaler
+   └─ co2_thresholds.pkl ... Category thresholds
+
+Database (MySQL)
+└─ [Optional] For storing predictions & history
+
+🔧 TROUBLESHOOTING
+================================================================================
+
+❌ "Cannot POST /api/predict"
+   → Make sure Flask backend is running on port 5000
+   → Check: python app.py in backend folder
+   → Verify: http://localhost:5000 is accessible
+
+❌ "CORS Error"
+   → Flask app has flask-cors enabled - should work
+   → Check browser console for exact error
+
+❌ "Port 80 already in use"
+   → Change Apache port in XAMPP: Apache > Config > httpd.conf
+   → Or close other applications using port 80
+
+❌ "Models not found"
+   → Run: python train_model.py first
+   → Check: models/ folder has .pkl files
+
+❌ "CSV not found"
+   → Copy ENERGY_DATA_CLEANED.csv to frontend/data/
+   → And to backend/data/
+
+🌐 ACCESS POINTS
+================================================================================
+
+Application:     http://localhost/sustainalyze/
+Backend API:     http://localhost:5000/api/predict
+XAMPP Localhost: http://localhost/
+PhpMyAdmin:      http://localhost/phpmyadmin/ (for MySQL)
+
+📝 COMMON TASKS
+================================================================================
+
+TO RETRAIN THE MODEL:
+  1. Update data/ENERGY_DATA_CLEANED.csv
+  2. Run: python train_model.py (in backend folder)
+  3. Restart Flask: python app.py
+
+TO ADD DATABASE (MySQL):
+  1. Create database: sustainalyze
+  2. Use XAMPP's PhpMyAdmin (http://localhost/phpmyadmin/)
+  3. Run provided SQL script (optional)
+  4. Update backend to connect to MySQL
+
+TO DEPLOY TO PRODUCTION:
+  1. Use Vercel for frontend, Heroku/PythonAnywhere for backend
+  2. Update API_URL in frontend/app.js to production server
+  3. Use environment variables for API keys
+
+✅ VERIFICATION CHECKLIST
+================================================================================
+□ XAMPP installed and Apache running
+□ Python 3.8+ installed
+□ All dependencies installed (pip install -r requirements.txt)
+□ Model trained (python train_model.py)
+□ Backend running (python app.py)
+□ Frontend in C:\xampp\htdocs\sustainalyze\
+□ CSV files in correct locations
+□ Application accessible at http://localhost/sustainalyze/
+□ Can enter data and get predictions
+□ Charts load with data
+
+🎉 YOU'RE ALL SET!
+================================================================================
+Enjoy SUSTAINALYZE - Carbon Emission Forecasting System!
+
+Questions? Check:
+- Flask docs: https://flask.palletsprojects.com/
+- Scikit-learn: https://scikit-learn.org/
+- Chart.js: https://www.chartjs.org/

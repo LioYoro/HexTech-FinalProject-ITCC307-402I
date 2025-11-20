@@ -1,0 +1,48 @@
+================================================================================
+SUSTAINALYZE - QUICK START GUIDE
+================================================================================
+
+For detailed setup, see: SETUP_GUIDE_PYTHON313.txt
+
+PREREQUISITE SETUP (ONE TIME):
+1. Install Python 3.13 from https://www.python.org/downloads/
+2. Install XAMPP from https://www.apachefriends.org/
+3. Create folder: C:\xampp\htdocs\sustainalyze\
+4. Copy project files to that folder
+5. Copy ENERGY_DATA_CLEANED.csv to backend/data/ and frontend/data/
+
+INSTALLATION:
+cd C:\xampp\htdocs\sustainalyze
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+TRAINING (ONE TIME):
+cd backend
+python train_model.py
+(Wait for: ✓ Model training complete!)
+
+RUNNING THE APPLICATION:
+Terminal 1:
+  cd C:\xampp\htdocs\sustainalyze\backend
+  python app.py
+  (Keep running, should show: * Running on http://127.0.0.1:5000)
+
+Terminal 2:
+  Open XAMPP Control Panel
+  Start Apache (green checkmark)
+
+Terminal 3:
+  Open browser: http://localhost/sustainalyze/frontend/
+
+VERIFY SETUP:
+cd backend
+python verify_model.py
+(Should show: ✓ MODEL VERIFICATION SUCCESSFUL!)
+
+TROUBLESHOOTING:
+- pip install error? → Run: python -m pip install --upgrade setuptools wheel
+- Model not found? → Run: python train_model.py again
+- Backend won't start? → Check if port 5000 is in use
+- Frontend not loading? → Verify Apache is running in XAMPP Control Panel
+
+================================================================================

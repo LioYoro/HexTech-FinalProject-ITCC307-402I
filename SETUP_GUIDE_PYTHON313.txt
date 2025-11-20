@@ -1,0 +1,220 @@
+================================================================================
+SUSTAINALYZE - SETUP GUIDE FOR PYTHON 3.13 & XAMPP
+================================================================================
+
+System Requirements:
+- Python 3.13+ (https://www.python.org/downloads/)
+- XAMPP (https://www.apachefriends.org/)
+- VSCode (optional, any text editor works)
+- Git (optional)
+
+================================================================================
+STEP 1: INSTALL PYTHON 3.13
+================================================================================
+
+Windows:
+1. Download Python 3.13 from https://www.python.org/downloads/
+2. Run the installer
+3. IMPORTANT: Check "Add Python 3.13 to PATH" during installation
+4. Click "Install Now"
+5. Verify installation:
+   - Open PowerShell/CMD
+   - Run: python --version
+   - Should show: Python 3.13.x
+
+macOS:
+1. Download Python 3.13 from https://www.python.org/downloads/
+2. Run the installer
+3. Verify: python3 --version
+
+Linux (Ubuntu/Debian):
+sudo apt update
+sudo apt install python3.13 python3.13-venv
+
+================================================================================
+STEP 2: INSTALL XAMPP
+================================================================================
+
+1. Download XAMPP from https://www.apachefriends.org/
+2. Run the installer and follow the setup wizard
+3. Choose installation directory (default: C:\xampp on Windows)
+4. Install Apache and MySQL (minimum required)
+5. Complete installation
+
+Verify XAMPP Installation:
+- Open XAMPP Control Panel
+- Click "Start" next to Apache and MySQL
+- Should see "Running" status in green
+
+================================================================================
+STEP 3: CREATE PROJECT FOLDER STRUCTURE
+================================================================================
+
+Create this folder structure in XAMPP htdocs:
+
+C:\xampp\htdocs\sustainalyze\
+├── backend\
+│   ├── app.py
+│   ├── train_model.py
+│   └── data\
+│       └── ENERGY_DATA_CLEANED.csv
+├── frontend\
+│   ├── index.html
+│   ├── styles.css
+│   ├── app.js
+│   └── data\
+│       └── ENERGY_DATA_CLEANED.csv
+├── requirements.txt
+└── models\ (created automatically when running train_model.py)
+
+================================================================================
+STEP 4: INSTALL PYTHON DEPENDENCIES
+================================================================================
+
+Windows (PowerShell as Administrator):
+1. Open PowerShell as Administrator
+2. Navigate to project: cd E:\XAMPP\htdocs\sustainalyze
+3. Upgrade pip: python -m pip install --upgrade pip
+4. Install dependencies: pip install -r requirements.txt
+
+If you get an error about setuptools, run:
+python -m pip install --upgrade setuptools wheel
+
+macOS/Linux (Terminal):
+1. Open Terminal
+2. Navigate to project: cd /path/to/xampp/htdocs/sustainalyze
+3. Upgrade pip: python3 -m pip install --upgrade pip
+4. Install dependencies: pip3 install -r requirements.txt
+
+Verify Installation:
+pip list
+(Should show pandas 2.1+, numpy 1.26+, scikit-learn 1.4+, flask 3.0+)
+
+================================================================================
+STEP 5: PLACE YOUR DATA FILE
+================================================================================
+
+1. Copy ENERGY_DATA_CLEANED.csv to BOTH locations:
+   - backend/data/ENERGY_DATA_CLEANED.csv
+   - frontend/data/ENERGY_DATA_CLEANED.csv
+
+2. Verify files are in correct locations before running model training
+
+================================================================================
+STEP 6: TRAIN THE MODEL
+================================================================================
+
+Windows (PowerShell):
+cd E:\XAMPP\htdocs\sustainalyze\backend
+python train_model.py
+
+macOS/Linux (Terminal):
+cd /path/to/xampp/htdocs/sustainalyze/backend
+python3 train_model.py
+
+Expected Output:
+✅ Model training complete! Model, scaler, and thresholds saved.
+
+If successful:
+- A "models" folder is created
+- Contains: gb_reg_model.pkl, scaler.pkl, co2_thresholds.pkl
+
+================================================================================
+STEP 7: RUN THE BACKEND SERVER
+================================================================================
+
+Windows (PowerShell):
+cd E:\XAMPP\htdocs\sustainalyze\backend
+python app.py
+
+macOS/Linux (Terminal):
+cd /path/to/xampp/htdocs/sustainalyze/backend
+python3 app.py
+
+Expected Output:
+ * Serving Flask app 'app'
+ * Running on http://127.0.0.1:5000
+
+Backend is now running on http://localhost:5000
+
+================================================================================
+STEP 8: START XAMPP & ACCESS FRONTEND
+================================================================================
+
+1. Open XAMPP Control Panel
+2. Click "Start" for Apache and MySQL
+3. Open browser: http://localhost/sustainalyze/frontend/
+4. The SUSTAINALYZE application should load
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: "Cannot import 'setuptools.build_meta'"
+Solution:
+python -m pip install --upgrade setuptools wheel
+pip install -r requirements.txt
+
+Problem: "ModuleNotFoundError: No module named 'pandas'"
+Solution:
+pip install pandas numpy scikit-learn flask flask-cors
+
+Problem: "FileNotFoundError: models/gb_reg_model.pkl"
+Solution:
+1. Make sure you ran: python train_model.py
+2. Verify output shows "Model training complete!"
+3. Check that models/ folder exists with 3 .pkl files
+
+Problem: "Connection refused" when accessing http://localhost:5000
+Solution:
+1. Verify Flask backend is running (Step 7)
+2. Check that port 5000 is not blocked
+3. If already in use, change port in app.py: app.run(port=5001)
+
+Problem: Frontend not loading at http://localhost/sustainalyze
+Solution:
+1. Start Apache in XAMPP Control Panel
+2. Verify files are in: C:\xampp\htdocs\sustainalyze\frontend\
+3. Try: http://localhost/sustainalyze/frontend/index.html
+
+Problem: CSV file not found during model training
+Solution:
+1. Verify ENERGY_DATA_CLEANED.csv is in backend/data/
+2. Check filename exactly matches (case-sensitive on Linux/Mac)
+3. Make sure file is not corrupted (open in Excel to verify)
+
+================================================================================
+RUNNING THE FULL APPLICATION
+================================================================================
+
+Terminal 1 - Train Model (ONE TIME ONLY):
+cd backend
+python train_model.py
+
+Terminal 2 - Run Backend Server:
+cd backend
+python app.py
+(Keep this running while using the app)
+
+Terminal 3 - Use the Frontend:
+Open browser: http://localhost/sustainalyze/frontend/
+
+All three components should be running simultaneously.
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Use the Prediction Tab to test the model
+2. Try the Visualizations Tab to explore data
+3. Modify input values to see how features affect CO2 predictions
+4. Customize colors/styling in frontend/styles.css
+5. Adjust model parameters in backend/train_model.py for better accuracy
+
+For deployment to production, consider:
+- Using Gunicorn for Flask in production
+- Hosting frontend on Vercel
+- Hosting backend on Heroku or PythonAnywhere
+- Setting up SSL/HTTPS certificates
+
+================================================================================

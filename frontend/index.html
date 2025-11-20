@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUSTAINALYZE - Carbon Emission Forecasting</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">🌍 SUSTAINALYZE</h1>
+            <p class="subtitle">Carbon Emission Forecasting using Machine Learning</p>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'prediction')">
+                🔮 Prediction Tool
+            </button>
+            <button class="tab-btn" onclick="openTab(event, 'visualizations')">
+                📊 Data Visualizations
+            </button>
+            <button class="tab-btn" onclick="openTab(event, 'about')">
+                ℹ️ About
+            </button>
+        </div>
+
+        <!-- PREDICTION TAB -->
+        <div id="prediction" class="tab-content active">
+            <div class="prediction-container">
+                <h2>Enter Energy & Economic Indicators</h2>
+                <form id="predictionForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Access to electricity (% of population)</label>
+                            <input type="number" id="Access to electricity (% of population)" min="0" max="100" step="0.1" placeholder="0-100" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Access to clean fuels for cooking</label>
+                            <input type="number" id="Access to clean fuels for cooking" min="0" max="100" step="0.1" placeholder="0-100" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Renewable capacity per capita</label>
+                            <input type="number" id="Renewable-electricity-generating-capacity-per-capita" min="0" max="10" step="0.01" placeholder="0-10" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Financial flows to developing countries (US $)</label>
+                            <input type="number" id="Financial flows to developing countries (US $)" min="0" step="100000" placeholder="0+" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Renewable energy share (%)</label>
+                            <input type="number" id="Renewable energy share in the total final energy consumption (%)" min="0" max="100" step="0.1" placeholder="0-100" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Electricity from fossil fuels (TWh)</label>
+                            <input type="number" id="Electricity from fossil fuels (TWh)" min="0" max="1000" step="0.1" placeholder="0-1000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Electricity from nuclear (TWh)</label>
+                            <input type="number" id="Electricity from nuclear (TWh)" min="0" max="500" step="0.1" placeholder="0-500" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Electricity from renewables (TWh)</label>
+                            <input type="number" id="Electricity from renewables (TWh)" min="0" max="1000" step="0.1" placeholder="0-1000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Low-carbon electricity (%)</label>
+                            <input type="number" id="Low-carbon electricity (% electricity)" min="0" max="100" step="0.1" placeholder="0-100" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Primary energy consumption per capita (kWh/person)</label>
+                            <input type="number" id="Primary energy consumption per capita (kWh/person)" min="100" max="10000" step="1" placeholder="100-10000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Energy intensity level (MJ/$2017 PPP GDP)</label>
+                            <input type="number" id="Energy intensity level of primary energy (MJ/$2017 PPP GDP)" min="1" max="30" step="0.1" placeholder="1-30" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Renewables (% equivalent primary energy)</label>
+                            <input type="number" id="Renewables (% equivalent primary energy)" min="0" max="100" step="0.1" placeholder="0-100" required>
+                        </div>
+                        <div class="form-group">
+                            <label>GDP growth (%)</label>
+                            <input type="number" id="gdp_growth" min="-10" max="15" step="0.1" placeholder="-10 to 15" required>
+                        </div>
+                        <div class="form-group">
+                            <label>GDP per capita (USD)</label>
+                            <input type="number" id="gdp_per_capita" min="100" max="150000" step="1" placeholder="100-150000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Population Density (P/Km²)</label>
+                            <input type="number" id="Density_(P/Km2)" min="1" max="2000" step="0.1" placeholder="1-2000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Land Area (Km²)</label>
+                            <input type="number" id="Land Area(Km2)" min="100" max="10000000" step="1" placeholder="100+" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Latitude</label>
+                            <input type="number" id="Latitude" min="-90" max="90" step="0.01" placeholder="-90 to 90" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Longitude</label>
+                            <input type="number" id="Longitude" min="-180" max="180" step="0.01" placeholder="-180 to 180" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-predict">🚀 Predict CO₂ Emissions</button>
+                </form>
+
+                <div id="result" class="result hidden">
+                    <h3>Prediction Result</h3>
+                    <div class="result-card">
+                        <div class="result-value">
+                            <span id="resultEmission" class="emission-value">-</span> kt CO₂
+                        </div>
+                        <div class="result-category" id="resultCategory">
+                            Category: -
+                        </div>
+                        <div class="result-info" id="resultInfo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISUALIZATIONS TAB -->
+        <div id="visualizations" class="tab-content">
+            <div class="visualizations-container">
+                <h2>Energy Data Visualizations</h2>
+                
+                <div class="chart-grid">
+                    <div class="chart-box">
+                        <h3>CO₂ Emissions Distribution</h3>
+                        <canvas id="emissionChart"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <h3>Renewable vs Fossil Fuel Energy</h3>
+                        <canvas id="energySourceChart"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <h3>GDP per Capita vs CO₂ Emissions</h3>
+                        <canvas id="gdpChart"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <h3>Renewable Energy Share Trend</h3>
+                        <canvas id="renewableShareChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABOUT TAB -->
+        <div id="about" class="tab-content">
+            <div class="about-container">
+                <h2>About SUSTAINALYZE</h2>
+                <div class="about-content">
+                    <h3>🌍 Mission</h3>
+                    <p>SUSTAINALYZE uses machine learning to forecast carbon emissions and support climate action decisions in line with UN Sustainable Development Goal 13.</p>
+                    
+                    <h3>🔬 Technology</h3>
+                    <p><strong>Model:</strong> Gradient Boosting Regressor trained on global energy data</p>
+                    <p><strong>Features:</strong> 18 energy and economic indicators</p>
+                    <p><strong>Categories:</strong> Low, Medium, High CO₂ emissions</p>
+                    
+                    <h3>📊 Data Source</h3>
+                    <p>Global Data on Sustainable Energy (Kaggle) - Updated 2023</p>
+                    <p>Data from World Bank, IEA (International Energy Agency), and UN databases</p>
+                    
+                    <h3>✅ Accuracy</h3>
+                    <p id="accuracy">Loading model performance...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

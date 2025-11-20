@@ -302,3 +302,19 @@ h2 {
     padding: 20px;
   }
 }
+
+.about-content ul {
+    margin: 0 0 20px 1.5em; /* bottom spacing + indent from header */
+    padding-left: 0;        /* remove default padding */
+    list-style-type: disc;  /* standard bullets */
+}
+
+.about-content ul li {
+    margin-bottom: 0.5em;   /* space between bullets */
+    font-size: 15px;
+    color: #555;
+}
+
+.about-content ul ul {
+    margin-left: 1em; 
+}
